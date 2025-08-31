@@ -18,26 +18,32 @@ spec:
           ports:
             - containerPort: {{ .Values.mongo.port }}
           volumeMounts:
-            - name: mongo-storage
+            - name: mongo-pvc
               mountPath: /data/db
-          resources:
-            requests:
-              cpu: "200m"
-              memory: "512Mi"
-            limits:
-              cpu: "1"
-              memory: "1Gi"
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.mongo.port }}
-            initialDelaySeconds: 20
-            periodSeconds: 15
-          readinessProbe:
-            exec:
-              command: ["mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
-            initialDelaySeconds: 15
-            periodSeconds: 10
       volumes:
-        - name: mongo-storage
+        - name: mongo-pvc
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mongo
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-mongo
+  ports:
+    - protocol: TCP
+      port: {{ .Values.mongo.port }}
+      targetPort: {{ .Values.mongo.port }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-mongo-pvc
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: {{ .Values.mongo.pvcSize }}
