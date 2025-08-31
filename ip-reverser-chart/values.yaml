@@ -1,0 +1,16 @@
+backend:
+  image: ip-backend:latest
+  port: 3001
+  nodePort: 31001
+  imagePullPolicy: Never   # use local image
+
+frontend:
+  image: ip-frontend:latest
+  port: 80
+  nodePort: 31000
+  imagePullPolicy: Never   # use local image
+
+mongo:
+  image: mongo:6
+  port: 27017
+  pvcSize: 1Gi

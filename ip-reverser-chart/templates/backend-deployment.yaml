@@ -1,0 +1,10 @@
+spec:
+  containers:
+    - name: {{ .Chart.Name }}-backend
+      image: {{ .Values.backend.image }}
+      imagePullPolicy: {{ .Values.backend.imagePullPolicy }}
+      ports:
+        - containerPort: {{ .Values.backend.port }}
+      env:
+        - name: MONGO_URI
+          value: "mongodb://{{ .Chart.Name }}-mongo:27017/ipdb"

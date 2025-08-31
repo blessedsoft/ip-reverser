@@ -1,0 +1,7 @@
+spec:
+  containers:
+    - name: {{ .Chart.Name }}-frontend
+      image: {{ .Values.frontend.image }}
+      imagePullPolicy: {{ .Values.frontend.imagePullPolicy }}
+      ports:
+        - containerPort: {{ .Values.frontend.port }}
