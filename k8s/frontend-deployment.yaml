@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ip-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ip-frontend
+  template:
+    metadata:
+      labels:
+        app: ip-frontend
+    spec:
+      containers:
+        - name: ip-frontend
+          image: ip-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:        # 
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ip-frontend
+spec:
+  type: NodePort
+  selector:
+    app: ip-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080

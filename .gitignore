@@ -1,0 +1,63 @@
+# --- General ---
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+.env
+.env.*.local
+
+# --- Node.js (backend + frontend) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# --- Build outputs ---
+dist/
+build/
+coverage/
+.cache/
+.next/
+out/
+
+# --- React frontend ---
+# production build
+/frontend/build/
+# local config
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+
+# --- Backend ---
+/backend/node_modules/
+/backend/.env
+/backend/coverage/
+
+# --- Kubernetes / Docker ---
+# local kube configs
+*.kubeconfig
+# Helm charts temp
+charts/*
+# Docker stuff
+**/.dockerignore
+docker-compose.override.yml
+.docker-compose
+docker-data/
+
+# --- IDE / Editors ---
+.vscode/
+.idea/
+*.iml
+*.sublime-workspace
+*.sublime-project
+
+# --- OS specific ---
+ehthumbs.db
