@@ -9,7 +9,13 @@ function App() {
   const [history, setHistory] = useState([]);
 
   //  Use NodePort exposed on localhost
-  const backendUrl = "http://localhost:30081";
+  //const backendUrl = "http://localhost:3001";
+
+  //  Use internal K8s DNS name when running in cluster
+  //const backendUrl = "http://ipreverser-backend:3001";
+
+  const backendUrl = "/api"; 
+  
 
   const fetchHistory = async () => {
     try {
