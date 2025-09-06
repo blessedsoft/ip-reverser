@@ -28,5 +28,3 @@ ingress:
   enabled: true
   className: "nginx"
   host: ipreverser.local
-  annotations: {}
-  tls: []
