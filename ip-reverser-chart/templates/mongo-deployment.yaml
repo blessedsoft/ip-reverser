@@ -15,35 +15,13 @@ spec:
       containers:
         - name: mongo
           image: {{ .Values.mongo.image }}
+          imagePullPolicy: {{ .Values.mongo.imagePullPolicy | default "IfNotPresent" }}
           ports:
-            - containerPort: {{ .Values.mongo.port }}
+            - containerPort: {{ .Values.mongo.containerPort }}
           volumeMounts:
-            - name: mongo-pvc
+            - name: mongo-data
               mountPath: /data/db
       volumes:
-        - name: mongo-pvc
+        - name: mongo-data
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-mongo-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Release.Name }}-mongo
-spec:
-  type: ClusterIP
-  selector:
-    app: {{ .Release.Name }}-mongo
-  ports:
-    - protocol: TCP
-      port: {{ .Values.mongo.port }}
-      targetPort: {{ .Values.mongo.port }}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ .Release.Name }}-mongo-pvc
-spec:
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: {{ .Values.mongo.pvcSize }}
+            claimName: {{ .Values.mongo.pvc.existingClaim | default "ipreverser-mongo-pvc" }}

@@ -18,6 +18,7 @@ spec:
           imagePullPolicy: {{ .Values.frontend.imagePullPolicy }}
           ports:
             - containerPort: {{ .Values.frontend.port }}
+
 ---
 apiVersion: v1
 kind: Service

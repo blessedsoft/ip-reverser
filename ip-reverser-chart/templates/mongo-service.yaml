@@ -3,9 +3,10 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-mongo
 spec:
+  type: {{ .Values.mongo.service.type }}
   selector:
     app: {{ .Release.Name }}-mongo
   ports:
-    - protocol: TCP
-      port: {{ .Values.mongo.port }}
-      targetPort: {{ .Values.mongo.port }}
+    - name: mongo
+      port: {{ .Values.mongo.service.port }}
+      targetPort: {{ .Values.mongo.containerPort }}

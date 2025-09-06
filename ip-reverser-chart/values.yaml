@@ -1,16 +1,32 @@
+mongo:
+  containerPort: 27017
+  image: mongo:6.0
+  pvc:
+    existingClaim: ipreverser-mongo-pvc
+    size: 1Gi
+  service:
+    port: 27017
+    type: ClusterIP
+
+
 backend:
   image: ip-backend:latest
   port: 3001
-  nodePort: 31001
-  imagePullPolicy: Never   # use local image
+  nodePort: 32543 # Choose a new, unused port
+  imagePullPolicy: Never
 
+# In your values.yaml file
 frontend:
   image: ip-frontend:latest
   port: 80
-  nodePort: 31000
-  imagePullPolicy: Never   # use local image
+  nodePort: 32655
+  imagePullPolicy: Never
+  #backendUrl: "http://ipreverser-backend:3001" # Add this line
 
-mongo:
-  image: mongo:6
-  port: 27017
-  pvcSize: 1Gi
+
+ingress:
+  enabled: true
+  className: "nginx"
+  host: ipreverser.local
+  annotations: {}
+  tls: []
