@@ -5,14 +5,15 @@ metadata:
   name: {{ .Release.Name }}-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # Rewrite: strip "/api" and keep the rest
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   rules:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-          - path: /api(/|$)(.*)
-            pathType: Prefix
+          - path: /api/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-backend
