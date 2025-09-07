@@ -8,20 +8,20 @@ mongo:
     port: 27017
     type: ClusterIP
 
+
 backend:
   image: ip-backend:latest
   port: 3001
-  type: ClusterIP
-  imagePullPolicy: IfNotPresent
+  nodePort: 32543 # Choose a new, unused port
+  imagePullPolicy: Never
 
 # In your values.yaml file
 frontend:
   image: ip-frontend:latest
   port: 80
-  type: ClusterIP
-  imagePullPolicy: IfNotPresent
+  nodePort: 32655
+  imagePullPolicy: Never
   #backendUrl: "http://ipreverser-backend:3001" # Add this line
-
 
 
 ingress:

@@ -8,14 +8,12 @@ function App() {
   const [error, setError] = useState(null);
   const [history, setHistory] = useState([]);
 
-  //  Use NodePort exposed on localhost
-  //const backendUrl = "http://localhost:3001";
-
-  //  Use internal K8s DNS name when running in cluster
-  //const backendUrl = "http://ipreverser-backend:3001";
-
-  const backendUrl = "/api"; 
+  // NEW: State for the manual IP input and POST request result
+  const [manualIp, setManualIp] = useState('');
+  const [postResult, setPostResult] = useState(null);
+  const [postError, setPostError] = useState(null);
   
+  const backendUrl = "/api/";
 
   const fetchHistory = async () => {
     try {
@@ -33,6 +31,32 @@ function App() {
       setHistory([]);
     } catch (err) {
       setError('Failed to clear history');
+    }
+  };
+
+  // NEW: Function to handle a POST request for a manually entered IP
+  const handlePost = async () => {
+    setPostResult(null);
+    setPostError(null);
+    try {
+      const response = await fetch(`${backendUrl}/reverse-ip`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ip: manualIp }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to reverse IP via POST');
+      }
+
+      const data = await response.json();
+      setPostResult(data);
+      fetchHistory(); // Refresh history after a successful POST
+    } catch (err) {
+      setPostError(err.message);
     }
   };
 
@@ -56,7 +80,6 @@ function App() {
     fetchAndReverseIp();
   }, []);
 
-
   if (loading) return <div className="App">Loading...</div>;
   if (error) return <div className="App">Error: {error}</div>;
 
@@ -65,6 +88,26 @@ function App() {
       <h1>IP Address Reverser</h1>
       <p>Your original IP: <strong>{ipAddress}</strong></p>
       <p>Reversed IP: <strong>{reversedIp}</strong></p>
+
+      {/* NEW: Section for manual IP input and POST test */}
+      <hr />
+      <h2>Manually Reverse an IP</h2>
+      <input
+        type="text"
+        value={manualIp}
+        onChange={(e) => setManualIp(e.target.value)}
+        placeholder="Enter an IP address"
+      />
+      <button onClick={handlePost}>Reverse via POST</button>
+      {postResult && (
+        <p>
+          POST result: {postResult.ip} → {postResult.reversedIp}
+        </p>
+      )}
+      {postError && (
+        <p style={{ color: 'red' }}>POST Error: {postError}</p>
+      )}
+      <hr />
 
       <h2>History (latest 20)</h2>
       <button onClick={clearHistory}>Clear History</button>
