@@ -1,8 +1,9 @@
 version: "3.8"
 
 services:
-  backend:
+  backend-service:
     build: ./backend
+    image: ip-backend:v1.0.0
     container_name: ip-backend
     ports:
       - "3001:3001"
@@ -13,11 +14,12 @@ services:
 
   frontend:
     build: ./frontend
+    image: ip-frontend:v1.0.0
     container_name: ip-frontend
     ports:
-      - "3000:80"
+      - "80:80"
     depends_on:
-      - backend
+      - backend-service
 
   mongo:
     image: mongo:6.0
