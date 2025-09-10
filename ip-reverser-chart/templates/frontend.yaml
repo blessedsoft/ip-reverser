@@ -12,6 +12,10 @@ spec:
       labels:
         app: {{ .Values.frontend.name }}
     spec:
+      initContainers:
+      - name: wait-for-backend
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nslookup {{ .Values.backend.name }}-service; do echo waiting for backend-service; sleep 2; done;']
       containers:
         - name: {{ .Values.frontend.name }}
           image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
