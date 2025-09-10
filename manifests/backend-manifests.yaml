@@ -6,14 +6,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: backend-service
   template:
     metadata:
       labels:
-        app: backend
+        app: backend-service
     spec:
       containers:
-        - name: backend
+        - name: backend-service
           image: ip-backend:v1.0.0
           imagePullPolicy: Never
           ports:
@@ -35,7 +35,7 @@ metadata:
   name: backend-service
 spec:
   selector:
-    app: backend
+    app: backend-service
   ports:
     - protocol: TCP
       port: 3001
