@@ -1,21 +1,55 @@
-# Frontend configuration
+# Global settings for the entire application
+global:
+  imagePullPolicy: Never
+
+# Configuration for the MongoDB service
+mongo:
+  name: mongo
+  containerPort: 27017
+  image:
+    repository: mongo
+    tag: "6.0"
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  persistence:
+    enabled: true
+    storage: 1Gi
+    hostPath: /run/desktop/mnt/host/c/data/db
+    storageClassName: standard
+    pvcName: ipreverser-mongo-pvc
+    pvName: ipreverser-mongo-pv
+
+# Configuration for the backend service
+backend:
+  name: backend-service
+  replicaCount: 1
+  image:
+    repository: ip-backend
+    tag: "v1.0.0"
+  containerPort: 3001
+  env:
+    mongoUri: "mongodb://mongo-service:27017/ipdb"
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+
+# Configuration for the frontend service
 frontend:
-  name: frontend
+  name: frontend-service
   replicaCount: 1
   image:
     repository: ip-frontend
-    tag: v1.0.0
-    pullPolicy: Never
-  service:
-    port: 80
-    targetPort: 80
-  ingress:
-    enabled: true
-    host: ipreverser.local
-    path: /
-    ingressClassName: nginx
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /
+    tag: "v1.0.0"
+  containerPort: 80
   resources:
     requests:
       memory: "64Mi"
@@ -26,44 +60,12 @@ frontend:
   env:
     backendUrl: "http://backend-service:3001"
 
-# Backend configuration
-backend:
-  name: backend-service
-  replicaCount: 1
-  image:
-    repository: ip-backend
-    tag: v1.0.0
-    pullPolicy: Never
-  service:
-    port: 3001
-    targetPort: 3001
-  env:
-    mongoUri: mongodb://mongo-service:27017/ipdb
-  resources:
-    requests:
-      memory: "128Mi"
-      cpu: "100m"
-    limits:
-      memory: "256Mi"
-      cpu: "500m"
-
-# MongoDB configuration
-mongodb:
-  name: mongo
-  replicaCount: 1
-  image:
-    repository: mongo
-    tag: 6.0
-  service:
-    port: 27017
-    targetPort: 27017
-  persistence:
-    storage: 1Gi
-    hostPath: /run/desktop/mnt/host/c/data/db
-  resources:
-    requests:
-      memory: "256Mi"
-      cpu: "250m"
-    limits:
-      memory: "512Mi"
-      cpu: "500m"
+# Configuration for the Ingress
+ingress:
+  enabled: true
+  name: ipreverser-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  ingressClassName: nginx
+  host: ipreverser.local
+  path: /
