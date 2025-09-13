@@ -32,7 +32,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.backend.name }}-service
+  name: {{ .Values.backend.name }}
 spec:
   selector:
     app: {{ .Values.backend.name }}

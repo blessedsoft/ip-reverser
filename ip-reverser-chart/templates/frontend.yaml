@@ -15,7 +15,7 @@ spec:
       initContainers:
       - name: wait-for-backend
         image: busybox:1.28
-        command: ['sh', '-c', 'until nslookup {{ .Values.backend.name }}-service; do echo waiting for backend-service; sleep 2; done;']
+        command: ['sh', '-c', 'until nslookup {{ .Values.backend.name }}; do echo waiting for backend-service; sleep 5; done;']
       containers:
         - name: {{ .Values.frontend.name }}
           image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
@@ -36,7 +36,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.frontend.name }}-service
+  name: {{ .Values.frontend.name }}
 spec:
   selector:
     app: {{ .Values.frontend.name }}
